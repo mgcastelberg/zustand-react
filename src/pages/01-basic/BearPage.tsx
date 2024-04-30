@@ -1,5 +1,7 @@
+import { json } from 'react-router-dom';
 import { WhiteCard } from '../../components';
 import { useBearStore } from '../../stores';
+import { useShallow } from 'zustand/react/shallow';
 
 export const BearPage = () => {
   return (
@@ -11,6 +13,7 @@ export const BearPage = () => {
         <BlackBears/>
         <PolarBears/>
         <PandaBears/>
+        <BearsDisplay/>
       </div>
     </>
   );
@@ -62,3 +65,19 @@ export const PandaBears = () => {
   </WhiteCard>
   )
 }
+
+export const BearsDisplay = () => {
+  // const bears = useBearStore( state => state.bears );
+  const bears = useBearStore( useShallow(state => state.bears) );
+  const doNothing = useBearStore( state => state.doNothing );
+  return (
+    <WhiteCard>
+      <h1>Osos</h1>
+      <button onClick={ doNothing }>Do Nothing</button>
+      <pre>
+        { JSON.stringify(bears, null, 2) }
+      </pre>
+    </WhiteCard>
+  )
+}
+
