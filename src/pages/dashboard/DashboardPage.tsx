@@ -48,8 +48,6 @@ export const Dashboard = () => {
           <p>Información</p>
         </WhiteCard>
 
-
-
       </div>
 
     </>

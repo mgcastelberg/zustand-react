@@ -1,0 +1,19 @@
+import { create } from "zustand";
+
+interface PersonState {
+    firstName: string;
+    lastName: string;
+}
+
+interface Actions {
+    setFirstName: (value:string) => void;
+    setLastName: (value:string) => void;
+}
+
+// Unimos las 2 interfaces
+export const usePersonStore = create<PersonState & Actions>()( (set) => ({
+    firstName:'Manu',
+    lastName:'',
+    setFirstName: (value:string) => set( state => ({ firstName:value }) ),
+    setLastName: (value:string) => set( state => ({ lastName:value }) ),
+}));
