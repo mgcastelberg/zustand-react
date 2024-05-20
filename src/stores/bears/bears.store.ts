@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware';
 
 interface Bear {
     id: number;
@@ -11,9 +12,12 @@ interface BearState {
     pandaBears: number;
     bears: Bear[];
     // Implementando Manualmente
-    computed: {
-        totalBears: number;
-    };
+    // Para solventar el error de las suma al hacer el persist en lugar de computar lo hacemos metodo
+    // computed: {
+    //     totalBears: number;
+    // };
+    totalBears: () => number;
+
     increaseBlackBears: (by: number) => void;
     increasePolarBears: (by: number) => void;
     increasePandaBears: (by: number) => void;
@@ -22,27 +26,41 @@ interface BearState {
     clearBears: () => void;
 }
 
-export const useBearStore = create<BearState>()((set, get) => ({
-    blackBears: 10,
-    polarBears: 5,
-    pandaBears: 1,
-    bears:[{ id: 1, name: 'Oso #1'}],
+export const useBearStore = create<BearState>()(
 
-    computed:{
-        // Creando getter de JS
-        get totalBears(){
-            // ahora si tomamos el de zustand de su metodo get y sumamos
-            return get().blackBears + get().polarBears + get().pandaBears + get().bears.length;
+        persist (
+        
+            (set, get) => ({
+            blackBears: 10,
+            polarBears: 5,
+            pandaBears: 1,
+            bears:[{ id: 1, name: 'Oso #1'}],
+
+            // Removido al usar el persist
+            // computed:{
+            //     // Creando getter de JS
+            //     get totalBears(){
+            //         // ahora si tomamos el de zustand de su metodo get y sumamos
+            //         return get().blackBears + get().polarBears + get().pandaBears + get().bears.length;
+            //     }
+            // },
+
+            // Añadido para usar el persist
+            totalBears: () =>{
+                return get().blackBears + get().polarBears + get().pandaBears + get().bears.length;
+            },
+
+            increaseBlackBears: (by:number) => set((state) => ({ blackBears: state.blackBears + by })),
+            increasePolarBears: (by:number) => set((state) => ({ polarBears: state.polarBears + by })),
+            increasePandaBears: (by:number) => set((state) => ({ pandaBears: state.pandaBears + by })),
+            // nuevo puntero en memoria con el arreglo (crea un nuevo arreglo, para zustand va a ser un nuevo stado)
+            doNothing: () => set( state => ({ bears: [...state.bears]})),
+            addBear: () => set( state => ({ 
+                bears: [...state.bears, { id: state.bears.length + 1, name: `Oso # ${ state.bears.length + 1 }`  }]
+            })),
+            clearBears: () => set( ({ bears: []}) )
+        }),{
+           name:'bears-store' 
         }
-    },
-
-    increaseBlackBears: (by:number) => set((state) => ({ blackBears: state.blackBears + by })),
-    increasePolarBears: (by:number) => set((state) => ({ polarBears: state.polarBears + by })),
-    increasePandaBears: (by:number) => set((state) => ({ pandaBears: state.pandaBears + by })),
-    // nuevo puntero en memoria con el arreglo (crea un nuevo arreglo, para zustand va a ser un nuevo stado)
-    doNothing: () => set( state => ({ bears: [...state.bears]})),
-    addBear: () => set( state => ({ 
-        bears: [...state.bears, { id: state.bears.length + 1, name: `Oso # ${ state.bears.length + 1 }`  }]
-    })),
-    clearBears: () => set( ({ bears: []}) )
-}))
+    )
+)
