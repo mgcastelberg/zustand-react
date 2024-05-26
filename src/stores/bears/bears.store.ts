@@ -30,7 +30,7 @@ export const useBearStore = create<BearState>()(
 
         persist (
         
-            (set, get) => ({
+            (set, get, store) => ({
             blackBears: 10,
             polarBears: 5,
             pandaBears: 1,
@@ -47,6 +47,7 @@ export const useBearStore = create<BearState>()(
 
             // Añadido para usar el persist
             totalBears: () =>{
+                console.log(store);
                 return get().blackBears + get().polarBears + get().pandaBears + get().bears.length;
             },
 
