@@ -30,7 +30,7 @@ export const usePersonStore = create<PersonState & Actions>()(
                 storeAPI
             ,{ 
                 name: 'person-storage',
-                storage: firebaseStorage
+                // storage: firebaseStorage
             })
         )
     )
