@@ -1,3 +1,4 @@
+import { DragEvent } from 'react';
 import { IoCheckmarkCircleOutline, IoEllipsisHorizontalOutline } from 'react-icons/io5';
 import { Task, TaskStatus } from '../../interfaces';
 import { SingleTask } from './SingleTask';
@@ -11,8 +12,28 @@ interface Props {
 
 
 export const JiraTasks = ({ title, value, task }: Props) => {
+
+
+  const handleDragOver = ( e: DragEvent<HTMLDivElement> ) => {
+      e.preventDefault();
+      console.log('onDragOver');
+  }
+  const handleDragLeave = ( e: DragEvent<HTMLDivElement> ) => {
+      e.preventDefault();
+      console.log('handleDragLeave');
+  }
+  const handleDrop = ( e: DragEvent<HTMLDivElement> ) => {
+      e.preventDefault();
+      console.log('handleDrop',value);
+  }
+
   return (
-    <div className="!text-black relative flex flex-col rounded-[20px]  bg-white bg-clip-border shadow-3xl shadow-shadow-500  w-full !p-4 3xl:p-![18px]">
+    <div
+      onDragOver={ handleDragOver }
+      onDragLeave={ handleDragLeave }
+      onDrop={ handleDrop }
+      className="!text-black relative flex flex-col rounded-[20px]  bg-white bg-clip-border shadow-3xl shadow-shadow-500  w-full !p-4 3xl:p-![18px]"
+    >
 
 
       {/* Task Header */ }
