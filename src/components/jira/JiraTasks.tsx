@@ -1,19 +1,20 @@
 import { DragEvent, useState } from 'react';
-import { IoAdd, IoAddOutline, IoCheckmarkCircleOutline } from 'react-icons/io5';
+import { IoAddOutline, IoCheckmarkCircleOutline } from 'react-icons/io5';
 import { Task, TaskStatus } from '../../interfaces';
 import { SingleTask } from './SingleTask';
 import { useTaskStore } from '../../stores';
 import classNames from 'classnames';
+import Swal from 'sweetalert2';
 
 interface Props {
   title: string;
   task: Task[];
-  value: TaskStatus;
+  status: TaskStatus;
   // value: 'pending' | 'in-progress' | 'done';
 }
 
 
-export const JiraTasks = ({ title, value, task }: Props) => {
+export const JiraTasks = ({ title, status, task }: Props) => {
 
   const isDragging = useTaskStore( state => !!state.draggingTaskId ); // para tomarlo como un booleano
   // const changeTaskStatus = useTaskStore( state => state.changeTaskStatus );
@@ -24,27 +25,48 @@ export const JiraTasks = ({ title, value, task }: Props) => {
   const [onDragOver, setOnDragOver] = useState(false);
   // console.log(isDragging);
 
-  const handleAddTask = () => {
-    addTask('Nuevo Título', value);
-    console.log('handleAddTask');
+  const  handleAddTask = async () => {
+
+    const { isConfirmed, value } = await Swal.fire({
+      title: 'Nueva Tarea',
+      input: 'text', 
+      inputLabel: 'Nombre de la Tarea',
+      inputPlaceholder: 'Ingrese el nombre de la Tarea',
+      showCancelButton: true,
+      showConfirmButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Agregar',
+      cancelButtonColor: '#d33',
+      confirmButtonColor: '#3730a3',
+      inputValidator: (value) => {
+        if (!value) {
+          return 'debe ingresar el nombre de la Tarea';
+        }
+      }
+    });
+
+    if ( !isConfirmed ) return;
+    
+    addTask(value, status);
+    console.log(isConfirmed, value);
   }
 
   const handleDragOver = ( e: DragEvent<HTMLDivElement> ) => {
       e.preventDefault();
       setOnDragOver(true);
-      console.log('onDragOver');
+      // console.log('onDragOver');
   }
   const handleDragLeave = ( e: DragEvent<HTMLDivElement> ) => {
       e.preventDefault();
       setOnDragOver(false);
-      console.log('handleDragLeave');
+      // console.log('handleDragLeave');
   }
   const handleDrop = ( e: DragEvent<HTMLDivElement> ) => {
       e.preventDefault();
       setOnDragOver(false);
       // changeTaskStatus(dragingTaskId!, value);
-      onTaskDrop(value);
-      console.log('handleDrop',value);
+      onTaskDrop(status);
+      // console.log('handleDrop',status);
   }
 
   return (
