@@ -2,6 +2,8 @@ import { create, StateCreator } from "zustand";
 import type { Task, TaskStatus } from "../../interfaces";
 import { devtools } from "zustand/middleware";
 import { v4 as uuidv4 } from 'uuid';
+// import { produce } from 'immer';
+import { immer } from "zustand/middleware/immer";
 
 interface TaskState {
 
@@ -16,7 +18,7 @@ interface TaskState {
     onTaskDrop: ( status: TaskStatus) => void;
 }
 
-const storeApi: StateCreator<TaskState> = (set, get) => ({
+const storeApi: StateCreator<TaskState, [["zustand/immer", never]]> = (set, get) => ({
     draggingTaskId: undefined,
     tasks:{
         'ABC-1': { id: 'ABC-1', title: 'Task 1', status: 'open' },
@@ -31,12 +33,25 @@ const storeApi: StateCreator<TaskState> = (set, get) => ({
     },
     addTask: (title: string, status: TaskStatus) => {
         const newTask = { id: uuidv4(), title, status };
-        set((state) => ({
-            tasks: {
-                ...state.tasks,
-                [newTask.id]: newTask
-            }
-        }))
+
+        //? immer incluido en los middlewares
+        set( state => {
+            state.tasks[newTask.id] = newTask; // codigo mutante
+        });
+
+        // immer se puede usar en cualquier lugar que se use el spread - codigo mutante
+        //? Requiere el npm package immer
+        // set( produce((state: TaskState) => {
+        //     state.tasks[newTask.id] = newTask;
+        // }))
+
+        //? Forma nativa del zustand
+        // set((state) => ({
+        //     tasks: {
+        //         ...state.tasks,
+        //         [newTask.id]: newTask
+        //     }
+        // }))
     },
     setDraggedTaskId: (taskId: string) => {
         set({ draggingTaskId: taskId });
@@ -46,15 +61,22 @@ const storeApi: StateCreator<TaskState> = (set, get) => ({
     },
     changeTaskStatus: (taskId: string, status: TaskStatus) => {
         
-        const tasks = get().tasks[taskId];
-        tasks.status = status;
+        //? immer incluido en los middlewares
+        set( state => {
+            state.tasks[taskId] = {
+                ...state.tasks[taskId],
+                status
+            }; // codigo mutante
+        });
         
-        set((state) =>({
-            tasks:{
-                ...state.tasks, //hacemos el spread para no perder las otras tareas
-                [taskId]:tasks
-            }
-        }));
+        // const tasks = get().tasks[taskId];
+        // tasks.status = status; 
+        // set((state) =>({
+        //     tasks:{
+        //         ...state.tasks, //hacemos el spread para no perder las otras tareas
+        //         [taskId]:tasks
+        //     }
+        // }));
     },
     onTaskDrop: ( status: TaskStatus) => {
         const taskId = get().draggingTaskId;
@@ -66,6 +88,6 @@ const storeApi: StateCreator<TaskState> = (set, get) => ({
 
 export const useTaskStore = create<TaskState>()(
     devtools(
-        storeApi
+        immer( storeApi )
     )
 );
