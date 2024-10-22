@@ -1,8 +1,13 @@
 import { WhiteCard } from '../../components';
-
+import { useWeddingBoundStore } from '../../stores/wedding';
 
 
 export const WeddingInvitationPage = () => {
+  const firstName = useWeddingBoundStore( state => state.firstName );
+  const lastName = useWeddingBoundStore( state => state.lastName );
+
+  const setFirstName = useWeddingBoundStore( state => state.setFirstName );
+  const setLastName = useWeddingBoundStore( state => state.setLastName );
   return (
     <>
       <h1>Invitación de Boda</h1>
@@ -12,7 +17,7 @@ export const WeddingInvitationPage = () => {
       <WhiteCard className="flex items-center justify-center p-12">
         <div className="mx-auto w-full max-w-[550px]">
           <form>
-            <div className="-mx-3 flex flex-wrap">
+            <div className="flex flex-wrap -mx-3">
               <div className="w-full px-3 sm:w-1/2">
                 <div className="mb-5">
                   <label
@@ -25,6 +30,8 @@ export const WeddingInvitationPage = () => {
                     name="firstName"
                     id="firstName"
                     placeholder="Primer Nombre"
+                    value={firstName}
+                    onChange={e => setFirstName( e.target.value )}
                   />
                 </div>
               </div>
@@ -40,6 +47,8 @@ export const WeddingInvitationPage = () => {
                     name="lastName"
                     id="lastName"
                     placeholder="Apellido"
+                    value={lastName}
+                    onChange={e => setLastName( e.target.value )}
                   />
                 </div>
               </div>
@@ -60,7 +69,7 @@ export const WeddingInvitationPage = () => {
               />
             </div>
 
-            <div className="-mx-3 flex flex-wrap">
+            <div className="flex flex-wrap -mx-3">
               <div className="w-full px-3 sm:w-1/2">
                 <div className="mb-5">
                   <label
@@ -101,7 +110,7 @@ export const WeddingInvitationPage = () => {
                     type="radio"
                     name="isComing"
                     id="radioButton1"
-                    className="h-5 w-5"
+                    className="w-5 h-5"
                   />
                   <label
                     className="pl-3 text-base font-medium text-[#07074D]"
@@ -114,7 +123,7 @@ export const WeddingInvitationPage = () => {
                     type="radio"
                     name="isComing"
                     id="radioButton2"
-                    className="h-5 w-5"
+                    className="w-5 h-5"
                   />
                   <label
                     className="pl-3 text-base font-medium text-[#07074D]"
