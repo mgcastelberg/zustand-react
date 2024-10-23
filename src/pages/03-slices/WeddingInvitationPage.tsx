@@ -10,6 +10,9 @@ export const WeddingInvitationPage = () => {
   // -------------------------------------
   const guestCount = useWeddingBoundStore( state => state.guestCount );
   const setGuestCount = useWeddingBoundStore( state => state.setGuestCount );
+  // -------------------------------------
+  const eventYYYYMMDD = useWeddingBoundStore( state => state.eventYYYYMMDD() ); // Se añaden los parentesis para que se ejecute la función
+  const eventHHMM = useWeddingBoundStore( state => state.eventHHMM() ); // Se añaden los parentesis para que se ejecute la función
 
   return (
     <>
@@ -86,6 +89,7 @@ export const WeddingInvitationPage = () => {
                     type="date"
                     name="eventDate"
                     id="eventDate"
+                    value={eventYYYYMMDD}
                   />
                 </div>
               </div>
@@ -100,6 +104,7 @@ export const WeddingInvitationPage = () => {
                     type="time"
                     name="eventTime"
                     id="eventTime"
+                    value={eventHHMM}
                   />
                 </div>
               </div>
