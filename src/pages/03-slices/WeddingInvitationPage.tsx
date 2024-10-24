@@ -1,3 +1,4 @@
+import { FormEvent } from 'react';
 import { WhiteCard } from '../../components';
 import { useWeddingBoundStore } from '../../stores/wedding';
 
@@ -15,6 +16,15 @@ export const WeddingInvitationPage = () => {
   const eventHHMM = useWeddingBoundStore( state => state.eventHHMM() ); // Se añaden los parentesis para que se ejecute la función
   const setEventDate = useWeddingBoundStore( state => state.setEventDate );
   const setEventTime = useWeddingBoundStore( state => state.setEventTime );
+  const eventDate = useWeddingBoundStore( state => state.eventDate );
+  // -------------------------------------
+  const isConfirmed = useWeddingBoundStore( state => state.isConfirmed );
+  const setIsConfirmed = useWeddingBoundStore( state => state.setIsConfirmed );
+
+  const mySubmitHandler = (event: FormEvent<HTMLFormElement> ) => {
+    event.preventDefault();
+    console.log({ firstName, lastName, guestCount, eventDate, isConfirmed});
+  }
 
   return (
     <>
@@ -24,7 +34,7 @@ export const WeddingInvitationPage = () => {
 
       <WhiteCard className="flex items-center justify-center p-12">
         <div className="mx-auto w-full max-w-[550px]">
-          <form>
+          <form onSubmit={ mySubmitHandler } >
             <div className="flex flex-wrap -mx-3">
               <div className="w-full px-3 sm:w-1/2">
                 <div className="mb-5">
@@ -125,6 +135,8 @@ export const WeddingInvitationPage = () => {
                     name="isComing"
                     id="radioButton1"
                     className="w-5 h-5"
+                    checked={isConfirmed}
+                    onChange={()=> setIsConfirmed( true )}
                   />
                   <label
                     className="pl-3 text-base font-medium text-[#07074D]"
@@ -138,6 +150,8 @@ export const WeddingInvitationPage = () => {
                     name="isComing"
                     id="radioButton2"
                     className="w-5 h-5"
+                    checked={!isConfirmed}
+                    onChange={()=> setIsConfirmed( false )}
                   />
                   <label
                     className="pl-3 text-base font-medium text-[#07074D]"
