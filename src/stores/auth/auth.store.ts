@@ -1,19 +1,39 @@
-import { StateCreator } from "zustand";
+import { create, StateCreator } from "zustand";
 import { AuthStatus, User } from "../../interfaces";
+import { AuthService } from "../../services/auth.service";
+import { devtools, persist } from "zustand/middleware";
 
 
 export interface AuthState {
     status: AuthStatus;
     token?: string;
     user?: User;
+
+    loginUser: (email:string,password:string) => Promise<void>;
 }
 
 // Definimos espacio en memoria para el store
-export const storeApi: StateCreator<AuthState> = (set) => ({
+const storeApi: StateCreator<AuthState> = (set) => ({
     status: 'unauthorized',
     token: undefined,
     user: undefined,
-    // setAuthStatus: (status: AuthStatus) => set({ status }),
-    // setToken: (token: string) => set({ token }),
-    // setUser: (user: User) => set({ user }),
-})
+    // Methods
+    loginUser: async (email:string,password:string) => {
+        try {
+            const { token, ...user } = await AuthService.login(email,password);            
+            set({ status: 'authorized', token, user });
+        } catch (error) {
+            set({ status: 'unauthorized', token: undefined, user: undefined });
+        }
+    }
+    
+});
+
+export const useAuthStore = create<AuthState>()(
+    devtools(
+        persist(
+            storeApi,
+            { name: 'auth-storage' }
+        )
+    )
+);
