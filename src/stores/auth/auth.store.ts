@@ -11,6 +11,7 @@ export interface AuthState {
 
     loginUser: (email:string,password:string) => Promise<void>;
     checkAuthStatus: () => Promise<void>;
+    logoutUser:() => void;
 }
 
 // Definimos espacio en memoria para el store
@@ -37,6 +38,9 @@ const storeApi: StateCreator<AuthState> = (set) => ({
             throw 'Unauthorized';
         }
     },
+    logoutUser: () => {
+        set({ status: 'unauthorized', token: undefined, user: undefined });
+    }
     
 });
 

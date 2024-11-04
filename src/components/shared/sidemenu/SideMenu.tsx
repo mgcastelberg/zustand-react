@@ -1,8 +1,9 @@
 import type { IconType } from 'react-icons';
 import { IoSpeedometerOutline, IoPawOutline, IoLogOutOutline, IoHeartOutline, IoListOutline, IoAccessibilityOutline } from 'react-icons/io5';
-import { NavLink } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
 import './SideMenu.css';
 import { SideMenuItem } from './SideMenuItem';
+import { useAuthStore } from '../../../stores';
 
 
 interface MenuItem {
@@ -25,26 +26,28 @@ const menuItems: MenuItem[] = [
 
 export const SideMenu = () => {
 
+  const logoutUser = useAuthStore( state => state.logoutUser );
+
   return (
-    <div id="menu" className="bg-gray-900 min-h-screen z-10 text-slate-300 w-80 left-0 overflow-y-scroll">
-      <div id="logo" className="my-4 px-6">
+    <div id="menu" className="left-0 z-10 min-h-screen overflow-y-scroll bg-gray-900 text-slate-300 w-80">
+      <div id="logo" className="px-6 my-4">
         {/* Title */}
-        <h1 className="text-lg md:text-2xl font-bold text-white">
+        <h1 className="text-lg font-bold text-white md:text-2xl">
           Zustand
-          <span className="text-blue-500 text-xs"> StateManager</span>
+          <span className="text-xs text-blue-500"> StateManager</span>
           .
         </h1>
-        <p className="text-slate-500 text-sm">Manejador de estados simple pero poderoso.</p>
+        <p className="text-sm text-slate-500">Manejador de estados simple pero poderoso.</p>
       </div>
 
       {/*  Profile */ }
       <div id="profile" className="px-6 py-10">
         <p className="text-slate-500">Bienvenido,</p>
-        <a href="#" className="inline-flex space-x-2 items-center">
+        <a href="#" className="inline-flex items-center space-x-2">
           <span>
-            <img className="rounded-full w-8 h-8" src="https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=128&q=80" alt="" />
+            <img className="w-8 h-8 rounded-full" src="https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=128&q=80" alt="" />
           </span>
-          <span className="text-sm md:text-base font-bold">
+          <span className="text-sm font-bold md:text-base">
             Edward Tompson
           </span>
         </a>
@@ -62,15 +65,15 @@ export const SideMenu = () => {
 
 
         {/* Logout */}
-        <NavLink to={'/auth/login'} className="mt-10">
+        <a onClick={logoutUser} className="mt-10">
           <div>
             <IoLogOutOutline />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg text-slate-300 font-bold leading-5">Logout</span>
-            <span className="text-sm text-slate-500 hidden md:block">Cerrar sesión</span>
+            <span className="text-lg font-bold leading-5 text-slate-300">Logout</span>
+            <span className="hidden text-sm text-slate-500 md:block">Cerrar sesión</span>
           </div>
-        </NavLink>
+        </a>
 
       </nav>
     </div>
