@@ -10,11 +10,12 @@ export interface AuthState {
     user?: User;
 
     loginUser: (email:string,password:string) => Promise<void>;
+    checkAuthStatus: () => Promise<void>;
 }
 
 // Definimos espacio en memoria para el store
 const storeApi: StateCreator<AuthState> = (set) => ({
-    status: 'unauthorized',
+    status: 'pending',
     token: undefined,
     user: undefined,
     // Methods
@@ -24,8 +25,18 @@ const storeApi: StateCreator<AuthState> = (set) => ({
             set({ status: 'authorized', token, user });
         } catch (error) {
             set({ status: 'unauthorized', token: undefined, user: undefined });
+            throw 'Ubauthorized';
         }
-    }
+    },
+    checkAuthStatus: async () => {
+        try {
+            const { token, ...user } = await AuthService.checkStatus();            
+            set({ status: 'authorized', token, user });
+        } catch (error) {
+            set({ status: 'unauthorized', token: undefined, user: undefined });
+            throw 'Unauthorized';
+        }
+    },
     
 });
 
