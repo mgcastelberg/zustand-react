@@ -1,6 +1,6 @@
-import { IoAccessibilityOutline, IoHeartOutline, IoListOutline, IoLockClosedOutline, IoPawOutline } from 'react-icons/io5';
-import { WhiteCard } from '../../components';
-import { useBearStore, usePersonStore, useTaskStore } from '../../stores';
+import { IoAccessibilityOutline, IoHeartOutline, IoInformationOutline, IoListOutline, IoLockClosedOutline, IoPawOutline } from 'react-icons/io5';
+import { RequestInfo, WhiteCard } from '../../components';
+import { useAuthStore, useBearStore, usePersonStore, useTaskStore } from '../../stores';
 
 export const Dashboard = () => {
 
@@ -10,6 +10,9 @@ export const Dashboard = () => {
   const task = useTaskStore( state => state.tasks);
 
   const taskCount = Object.values( task ).length; // como es un objeto, usamos Object.values y obtenemos el length
+
+  // user Info
+  const userName = useAuthStore( state => state.user?.fullName ?? 'Sin usuario' );
 
   return (
     <>
@@ -51,7 +54,13 @@ export const Dashboard = () => {
         <WhiteCard centered>
           <IoLockClosedOutline size={ 50 } className="text-indigo-600" />
           <h2>Auth</h2>
-          <p>Información</p>
+          <p>{ userName }</p>
+        </WhiteCard>
+
+
+        <WhiteCard centered className='col-span-3'>
+          <IoInformationOutline size={ 50 } className="text-indigo-600" />
+          <RequestInfo />
         </WhiteCard>
 
       </div>
