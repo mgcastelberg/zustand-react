@@ -15,7 +15,7 @@ export class AuthService {
     static login = async (email:string, password:string): Promise<LoginResponse> => {
         try {
             const { data } = await tesloApi.post<LoginResponse>('/auth/login', { email, password });
-            console.log(data);
+            // console.log(data);
             return data;
         } catch (error) {
             if ( error instanceof AxiosError ) {
@@ -32,7 +32,7 @@ export class AuthService {
     static checkStatus = async():Promise<LoginResponse> => {
         try {
             const { data } = await tesloApi.get<LoginResponse>('/auth/refreshToken');
-            console.log(data);
+            // console.log(data);
             return data;
         } catch (error) {
             if ( error instanceof AxiosError ) {

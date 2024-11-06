@@ -5,7 +5,7 @@ const loggerImpl: any = (f:any, name:any) => (set:any, get:any, store:any) => {
 
     const loggedSet: typeof set = (...a: any[]) => {
       set(...a)
-      console.log(...(name ? [`${name}:`] : []), get())
+      // console.log(...(name ? [`${name}:`] : []), get())
     }
 
      store.setState = store.loggedSet

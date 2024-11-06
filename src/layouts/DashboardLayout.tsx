@@ -6,7 +6,7 @@ export const DashboardLayout = () => {
 
   const authStatus = useAuthStore((state) => state.status);
   const checkAuthStatus = useAuthStore((state) => state.checkAuthStatus);
-  console.log(authStatus);
+  // console.log(authStatus);
 
 
   if (authStatus === 'pending') {

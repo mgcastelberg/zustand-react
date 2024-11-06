@@ -13,7 +13,7 @@ export const SessionStorageAPI: StateStorage = {
         return null;
     },
     removeItem: function (name: string): null {
-        console.log('removeItem', name);
+        // console.log('removeItem', name);
         return null;
     }
 }

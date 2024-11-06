@@ -1,8 +1,8 @@
 import { create, type StateCreator } from "zustand";
-import { createJSONStorage, devtools, persist, StateStorage } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 // import { customSessionStorage } from "../storages/sesion-storage.storage";
-import { firebaseStorage } from "../storages/firebase.storage";
 import { logger } from "../middlewares/logger.middleware";
+import { useWeddingBoundStore } from "../wedding";
 
 interface PersonState {
     firstName: string;
@@ -27,11 +27,21 @@ export const usePersonStore = create<PersonState & Actions>()(
     logger(
         devtools(
             persist(
-                storeAPI
-            ,{ 
-                name: 'person-storage',
-                // storage: firebaseStorage
-            })
+                storeAPI, { 
+                    name: 'person-storage',
+                    // storage: firebaseStorage
+                }
+            )
         )
     )
 );
+
+// Acceso total al state
+// usePersonStore.subscribe((nextState, prevState) => {
+usePersonStore.subscribe((nextState) => {
+    // console.log({nextState, prevState});
+    // solo hay que tener cuidado de no agregarlo en wedding por que genera un loop infinito
+    const { firstName, lastName } = nextState;
+    useWeddingBoundStore.getState().setFirstName( firstName );
+    useWeddingBoundStore.getState().setLastName( lastName );
+});

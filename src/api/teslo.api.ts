@@ -12,7 +12,7 @@ const tesloApi = axios.create({
     (config) => {
         // const token = localStorage.getItem('token');
         const token = useAuthStore.getState().token;
-        console.log(token);
+        // console.log(token);
 
         if(token) {
             config.headers['Authorization'] = `Bearer ${token}`;

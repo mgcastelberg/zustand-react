@@ -11,7 +11,7 @@ export const LoginPage = () => {
   const onSubmit = async(event: FormEvent<HTMLFormElement> ) => {
     event.preventDefault();
     // const { username, password, remember } = event.target as HTMLFormElement;
-    const { username, password, remember } = event.target as typeof event.target & {
+    const { username, password } = event.target as typeof event.target & {
       username: { value: string };
       password: { value: string };
       remember: { checked: boolean }
